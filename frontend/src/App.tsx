@@ -1,33 +1,33 @@
-import { useState } from 'react';
-import reactLogo from './assets/react.svg';
-import viteLogo from '/vite.svg';
-import './App.css';
+import { useState, useEffect } from "react";
+import { BrowserProvider } from "ethers";
+import { Wallet } from "./components/wallet/wallet.tsx";
 
 function App() {
-  const [count, setCount] = useState(0);
+  const [provider, setProvider] = useState<BrowserProvider | null>(null);
+  const [address, setAddress] = useState<string>("");
+
+  useEffect(() => {
+    const connectWallet = async () => {
+      if (!window.ethereum) {
+        alert("Metamask extension is required");
+        return;
+      }
+
+      const ethProvider = new BrowserProvider(window.ethereum);
+      const signer = await ethProvider.getSigner();
+      const userAddress = await signer.getAddress();
+
+      setProvider(ethProvider);
+      setAddress(userAddress);
+    };
+
+    connectWallet();
+  }, []);
+  console.log(address, provider)
 
   return (
     <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount(count => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
+      <Wallet address={address} />
     </>
   );
 }
