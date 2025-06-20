@@ -1,4 +1,4 @@
-.mainContainer {
+.main-container {
   height: 100vh;
   width: 100vw;
   display: flex;
@@ -6,7 +6,7 @@
   background-color: black;
 }
 
-.walletContainer {
+.wallet-container {
   max-width: 640px;
   max-height: 240px;
   margin-top: 180px;
@@ -24,14 +24,14 @@
   text-align: center;
 }
 
-.balanceValue {
+.balance-value {
   font-size: 32px;
   font-weight: bold;
   margin-bottom: 20px;
   min-height: 40px;
 }
 
-.buttonsContainer {
+.buttons-container {
   display: flex;
   gap: 12px;
   justify-content: center;
