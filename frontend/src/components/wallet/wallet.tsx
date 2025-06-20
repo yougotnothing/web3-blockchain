@@ -1,11 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { JsonRpcProvider, formatEther, Contract, formatUnits } from 'ethers';
 import './wallet.css';
-import {
-  BSC_RPC_URL,
-  ERC20_ABI,
-  WETH_BSC_ADDRESS,
-} from '../../constants/constants';
+import { ERC20_ABI } from 'utils/constants';
 
 type WalletProps = {
   address: string;
@@ -21,12 +17,12 @@ export const Wallet: React.FC<WalletProps> = ({ address }) => {
     const fetchBalance = async () => {
       setIsLoading(true);
       try {
-        const provider = new JsonRpcProvider(BSC_RPC_URL);
+        const provider = new JsonRpcProvider(import.meta.env.BSC_RPC_URL);
 
         const nativeBalance = await provider.getBalance(address);
 
         const wethContract = new Contract(
-          WETH_BSC_ADDRESS,
+          import.meta.env.WETH_BSC_ADDRESS,
           ERC20_ABI,
           provider
         );
