@@ -3,11 +3,7 @@ import { JsonRpcProvider, formatEther, Contract, formatUnits } from 'ethers';
 import './wallet.css';
 import { ERC20_ABI } from 'utils/constants';
 
-type WalletProps = {
-  address: string;
-};
-
-export const Wallet: FC<WalletProps> = ({ address }) => {
+export const Wallet: FC<{ address: string }> = ({ address }) => {
   const [balance, setBalance] = useState<string>('0.00');
   const [isLoading, setIsLoading] = useState(false);
 
