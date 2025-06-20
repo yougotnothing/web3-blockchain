@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { JsonRpcProvider, formatEther, Contract, formatUnits } from "ethers";
-import styles from "./wallet.module.css";
+import "./wallet.css";
 import { BSC_RPC_URL, ERC20_ABI, WETH_BSC_ADDRESS } from "../../constants/constants";
 
 type WalletProps = {
@@ -40,28 +40,28 @@ export const Wallet: React.FC<WalletProps> = ({ address }) => {
   }, [address]);
 
   return (
-    <div className={styles.mainContainer}>
-			<div className={styles.walletContainer}>
+    <div className="main-container">
+			<div className="wallet-container">
 				<h2>Wallet Balance</h2>
-				<div className={styles.balanceValue}>
+				<div className="balance-value">
 						{isLoading ? "Loading..." : `${balance} ETH`}
 				</div>
 
-				<div className={styles.buttonsContainer}>
+				<div className="buttons-container">
 						<button
-						className={`${styles.button}`}
+						className="button"
 						onClick={() => alert("1")}
 						>
 						Send
 						</button>
 						<button
-						className={`${styles.button}`}
+						className="button"
 						onClick={() => alert("2")}
 						>
 						Receive
 						</button>
 						<button
-						className={`${styles.button}`}
+						className="button"
 						onClick={() => alert("3")}
 						>
 						Swap
