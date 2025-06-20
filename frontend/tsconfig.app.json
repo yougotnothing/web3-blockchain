@@ -7,6 +7,17 @@
     "module": "ESNext",
     "skipLibCheck": true,
 
+    "paths": {
+      "templates/*": ["./src/templates/*"],
+      "components/*": ["./src/components/*"],
+      "store/*": ["./src/stores/*.mobx"],
+      "utils/*": ["./src/utils/*"],
+      "hooks/*": ["./src/hooks/*"],
+      "pages/*": ["./src/pages/*"],
+      "types/*": ["./src/types/*.type"],
+      "@router": ["./src/router/router"]
+    },
+
     /* Bundler mode */
     "moduleResolution": "bundler",
     "allowImportingTsExtensions": true,
