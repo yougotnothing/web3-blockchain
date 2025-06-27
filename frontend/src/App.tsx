@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'react';
 import { BrowserProvider } from 'ethers';
-import { Wallet } from 'components/wallet/Wallet';
+import Wallet from 'components/wallet/wallet';
 
-function App() {
+const App = () => {
   const [provider, setProvider] = useState<BrowserProvider | null>(null);
   const [address, setAddress] = useState<string>('');
 
@@ -26,6 +26,6 @@ function App() {
   console.log(address, provider);
 
   return <Wallet address={address} />;
-}
+};
 
 export default App;
