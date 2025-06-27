@@ -12,6 +12,7 @@ type Transaction struct {
 	ID     uuid.UUID `json:"id" gorm:"type:uuid;default:uuid_generate_v4();primaryKey"`
 	UserID uuid.UUID `json:"user_id" gorm:"type:uuid;not null"`
 	Amount float64   `json:"amount" gorm:"type:decimal(10,2);not null"`
+	Status string    `json:"status" gorm:"type:varchar(20); not null default 'pending'"`
 }
 
 type User struct {
