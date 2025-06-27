@@ -3,26 +3,22 @@ import { JsonRpcProvider, formatEther, Contract, formatUnits } from 'ethers';
 import './wallet.css';
 import { ERC20_ABI } from 'utils/constants';
 
-type WalletProps = {
-  address: string;
-};
-
-export const Wallet: FC<WalletProps> = ({ address }) => {
+const Wallet: FC<{ address: string }> = ({ address }) => {
   const [balance, setBalance] = useState<string>('0.00');
   const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     if (!address) return;
 
-    const fetchBalance = async () => {
+    (async () => {
       setIsLoading(true);
       try {
-        const provider = new JsonRpcProvider(import.meta.env.BSC_RPC_URL);
+        const provider = new JsonRpcProvider(import.meta.env.VITE_BSC_RPC_URL);
 
         const nativeBalance = await provider.getBalance(address);
 
         const wethContract = new Contract(
-          import.meta.env.WETH_BSC_ADDRESS,
+          import.meta.env.VITE_WETH_BSC_ADDRESS,
           ERC20_ABI,
           provider
         );
@@ -38,9 +34,7 @@ export const Wallet: FC<WalletProps> = ({ address }) => {
       } finally {
         setIsLoading(false);
       }
-    };
-
-    fetchBalance();
+    })();
   }, [address]);
 
   return (
@@ -66,3 +60,5 @@ export const Wallet: FC<WalletProps> = ({ address }) => {
     </div>
   );
 };
+
+export default Wallet;

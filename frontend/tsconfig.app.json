@@ -6,7 +6,6 @@
     "lib": ["ES2020", "DOM", "DOM.Iterable"],
     "module": "ESNext",
     "skipLibCheck": true,
-
     "paths": {
       "templates/*": ["./src/templates/*"],
       "components/*": ["./src/components/*"],
@@ -14,7 +13,7 @@
       "utils/*": ["./src/utils/*"],
       "hooks/*": ["./src/hooks/*"],
       "pages/*": ["./src/pages/*"],
-      "types/*": ["./src/types/*.type"],
+      "types/*": ["./src/types/*"],
       "@router": ["./src/router/router"]
     },
     "moduleResolution": "bundler",
