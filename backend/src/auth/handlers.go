@@ -22,11 +22,11 @@ func GenerateToken(user *models.User) Tokens {
 func RefreshTokens(user *models.User) gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 		token, _ := ctx.Cookie("refresh_token")
-		isVerified, error := jwt.Parse(token, func(t *jwt.Token) (interface{}, error) {
+		isVerified, error := jwt.Parse(token, func(t *jwt.Token) (any, error) {
 			if _, ok := t.Method.(*jwt.SigningMethodECDSA); !ok {
-				return nil, jwt.ErrSignatureInvalid
+				return false, jwt.ErrSignatureInvalid
 			}
-			return []byte("secret"), nil
+			return true, nil
 		})
 
 		if error != nil {

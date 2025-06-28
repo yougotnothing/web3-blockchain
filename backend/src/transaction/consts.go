@@ -1,7 +1,7 @@
 package transaction
 
 const (
-	TransactionStatusPending = "PENDING"
-	TransactionStatusSuccess = "SUCCESS"
-	TransactionStatusFailed  = "FAILED"
+	TransactionStatusPending string = "PENDING"
+	TransactionStatusSuccess string = "SUCCESS"
+	TransactionStatusFailed  string = "FAILED"
 )
