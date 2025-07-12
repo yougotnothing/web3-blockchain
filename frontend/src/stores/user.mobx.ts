@@ -1,18 +1,6 @@
 import { action, makeObservable, observable } from 'mobx';
 import type { Transaction } from 'types/transaction';
-
-abstract class User {
-  public name: string = '';
-  public email: string = '';
-  private id: string = '';
-  public avatar: string | null = null;
-  public transactions: Transaction[] = [];
-  public created_at: string | Date = '';
-
-  private setId(id: string) {
-    this.id = id;
-  }
-}
+import api from 'api';
 
 class UserStore {
   @observable public name: string = '';
@@ -26,6 +14,7 @@ class UserStore {
     makeObservable(this);
   }
 
+  @action
   private setId(id: string) {
     this.id = id;
   }
@@ -38,6 +27,47 @@ class UserStore {
   @action
   private setEmail(email: string) {
     this.email = email;
+  }
+
+  @action
+  private setAvatar(avatar: string) {
+    this.avatar = avatar;
+  }
+
+  @action
+  private setTransactions(transactions: Transaction[]) {
+    this.transactions = transactions;
+  }
+
+  @action
+  private setCreatedAt(created_at: string | Date) {
+    this.created_at = created_at;
+  }
+
+  @action.bound
+  public async getTransactions(): Promise<void> {
+    try {
+      const response = await api.get(`transactions/${this.id}`);
+      this.setTransactions(response.data);
+    } catch (error) {
+      console.error((error as Record<string, any>).response.data);
+    }
+  }
+
+  @action.bound
+  public async getSelf(): Promise<void> {
+    try {
+      const response = await api.get('self');
+
+      this.setId(response.data.id);
+      this.setName(response.data.name);
+      this.setEmail(response.data.email);
+      this.setAvatar(response.data.avatar);
+      this.setTransactions(response.data.transactions);
+      this.setCreatedAt(response.data.created_at);
+    } catch (error) {
+      console.error(error);
+    }
   }
 }
 
