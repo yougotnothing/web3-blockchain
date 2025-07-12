@@ -3,7 +3,12 @@ import { JsonRpcProvider, formatEther, Contract, formatUnits } from 'ethers';
 import './wallet.css';
 import { ERC20_ABI } from 'utils/constants';
 
-const Wallet: FC<{ address: string }> = ({ address }) => {
+type WalletProps = {
+  address: string;
+};
+
+export const Wallet: FC<WalletProps> = ({ address }) => {
+
   const [balance, setBalance] = useState<string>('0.00');
   const [isLoading, setIsLoading] = useState(false);
 
@@ -38,7 +43,6 @@ const Wallet: FC<{ address: string }> = ({ address }) => {
   }, [address]);
 
   return (
-    <div className="main-container">
       <div className="wallet-container">
         <h2>Wallet Balance</h2>
         <div className="balance-value">
@@ -57,7 +61,6 @@ const Wallet: FC<{ address: string }> = ({ address }) => {
           </button>
         </div>
       </div>
-    </div>
   );
 };
 
