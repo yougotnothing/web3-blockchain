@@ -14,3 +14,9 @@ type LoginResponse struct {
 	Message     string `json:"message"`
 	AccessToken string `json:"access_token"`
 }
+
+type RegisterDto struct {
+	Name     string `json:"name"`
+	Email    string `json:"email"`
+	Password string `json:"password"`
+}

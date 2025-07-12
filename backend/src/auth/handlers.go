@@ -1,11 +1,14 @@
 package auth
 
 import (
+	"net/http"
 	"time"
 	"web3-blockchain/backend/src/models"
 
 	"github.com/gin-gonic/gin"
 	"github.com/golang-jwt/jwt/v5"
+	"golang.org/x/crypto/bcrypt"
+	"gorm.io/gorm"
 )
 
 func GenerateToken(user *models.User) Tokens {
@@ -43,13 +46,62 @@ func RefreshTokens(user *models.User) gin.HandlerFunc {
 	}
 }
 
-// func Login() gin.HandlerFunc {
-// 	return func(ctx *gin.Context) {
-// 		var loginDto LoginDto
+func Login(db *gorm.DB) gin.HandlerFunc {
+	return func(ctx *gin.Context) {
+		var loginDto LoginDto
+		var user models.User
 
-// 		if err := ctx.ShouldBindJSON(&loginDto); err != nil {
-// 			ctx.JSON(400, gin.H{"error": err.Error()})
-// 			return
-// 		}
-// 	}
-// }
+		if err := ctx.ShouldBindJSON(&loginDto); err != nil {
+			ctx.JSON(400, gin.H{"error": err.Error()})
+			return
+		}
+
+		if err := db.First(&user, "email = ?", loginDto.Email).Error; err != nil {
+			ctx.JSON(400, gin.H{"error": err.Error()})
+			return
+		}
+
+		if bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(loginDto.Password)) != nil {
+			ctx.JSON(401, gin.H{"error": "Invalid credentials"})
+			return
+		}
+
+		tokens := GenerateToken(&user)
+
+		ctx.SetCookie("refresh_token", string(tokens.RefreshToken), 360000, "/", "http://localhost:5173", true, true)
+		ctx.JSON(200, gin.H{"message": "Logged in success", "access_token": tokens.AccessToken})
+	}
+}
+
+func Register(db *gorm.DB) gin.HandlerFunc {
+	return func(ctx *gin.Context) {
+		var registerDto RegisterDto
+		var user models.User
+
+		if err := ctx.ShouldBindJSON(&registerDto); err != nil {
+			ctx.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		}
+
+		if err := db.First(&user, "email = ?", registerDto.Email).Error; err == nil {
+			ctx.JSON(400, gin.H{"error": "Email already exists"})
+			return
+		}
+
+		hashedPassword, err := bcrypt.GenerateFromPassword([]byte(registerDto.Password), 12)
+
+		if err != nil {
+			ctx.JSON(500, gin.H{"error": err.Error()})
+			return
+		}
+
+		user.Password = string(hashedPassword)
+		user.Email = registerDto.Email
+		user.Name = registerDto.Name
+		user.CreatedAt = time.Now()
+
+		if err := db.Create(&user).Error; err != nil {
+			ctx.JSON(500, gin.H{"error": err})
+			return
+		}
+	}
+}
