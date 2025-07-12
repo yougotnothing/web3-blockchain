@@ -14,7 +14,8 @@
       "hooks/*": ["./src/hooks/*"],
       "pages/*": ["./src/pages/*"],
       "types/*": ["./src/types/*"],
-      "@router": ["./src/router/router"]
+      "@router": ["./src/router/router"],
+      "api": ["./src/api/axios.config"]
     },
     "moduleResolution": "bundler",
     "allowImportingTsExtensions": true,
