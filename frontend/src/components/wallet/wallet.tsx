@@ -8,13 +8,14 @@ type WalletProps = {
 };
 
 export const Wallet: FC<WalletProps> = ({ address }) => {
+
   const [balance, setBalance] = useState<string>('0.00');
   const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     if (!address) return;
 
-    const fetchBalance = async () => {
+    (async () => {
       setIsLoading(true);
       try {
         const provider = new JsonRpcProvider(import.meta.env.VITE_BSC_RPC_URL);
@@ -38,9 +39,7 @@ export const Wallet: FC<WalletProps> = ({ address }) => {
       } finally {
         setIsLoading(false);
       }
-    };
-
-    fetchBalance();
+    })();
   }, [address]);
 
   return (
@@ -64,3 +63,5 @@ export const Wallet: FC<WalletProps> = ({ address }) => {
       </div>
   );
 };
+
+export default Wallet;

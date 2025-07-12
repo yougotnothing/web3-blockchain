@@ -30,6 +30,6 @@ function App() {
       <Wallet address={address} />
     </div>
   );
-}
+};
 
 export default App;
