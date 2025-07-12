@@ -1,15 +1,16 @@
-import { useState, useEffect } from 'react';
-import { BrowserProvider } from 'ethers';
-import { Wallet } from 'components/wallet/Wallet';
+import { useState, useEffect } from "react";
+import { BrowserProvider } from "ethers";
+import { Wallet } from "./components/wallet/wallet.tsx";
+import './index.css'
+import { NavMenu } from "components/navmenu/navmenu.tsx";
 
 function App() {
-  const [provider, setProvider] = useState<BrowserProvider | null>(null);
-  const [address, setAddress] = useState<string>('');
+  const [address, setAddress] = useState<string>("");
 
   useEffect(() => {
     const connectWallet = async () => {
       if (!window.ethereum) {
-        alert('Metamask extension is required');
+        alert("Metamask extension is required");
         return;
       }
 
@@ -17,15 +18,18 @@ function App() {
       const signer = await ethProvider.getSigner();
       const userAddress = await signer.getAddress();
 
-      setProvider(ethProvider);
       setAddress(userAddress);
     };
 
     connectWallet();
   }, []);
-  console.log(address, provider);
 
-  return <Wallet address={address} />;
+  return (
+    <div className="main-container">
+      <NavMenu />
+      <Wallet address={address} />
+    </div>
+  );
 }
 
 export default App;
