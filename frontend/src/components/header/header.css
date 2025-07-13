@@ -1,0 +1,69 @@
+.header-container {
+  display: flex;
+  justify-content: space-between;
+  height: 80px;
+  background-color: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-left: none;
+  padding: 15px 30px;
+}
+
+.searchbar-container {
+  display: flex;
+  align-items: center;
+  background-color: black;
+  height: 50px;
+  width: 60%;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 10px;
+  padding-left: 10px;
+  cursor: pointer;
+}
+
+.searchbar-container:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+.searchbar-input {
+  width: 100%;
+  height: 100%;
+  cursor: pointer;
+  font-size: 20px;
+  padding-left: 5px;
+} 
+
+.searchbar-icon {
+  width: 24px;
+}
+
+.profile-container {
+  display: flex;
+  align-items: center;
+  justify-content: end;
+  width: 400px;
+  padding-right: 40px;
+}
+
+.profile-image {
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+}
+
+.profile-user_container {
+  padding: 10px;
+  width: 200px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.profile-user_name {
+  font-size: 18px;
+  line-height: 18px;
+}
+
+.profile-user_subname {
+  font-size: 14px;
+  color: rgba(255, 255, 255, 0.4);
+}
