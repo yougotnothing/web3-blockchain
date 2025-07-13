@@ -3,6 +3,7 @@ import { BrowserProvider } from "ethers";
 import { Wallet } from "./components/wallet/wallet.tsx";
 import './index.css'
 import { NavMenu } from "components/navmenu/navmenu.tsx";
+import { Header } from "components/header/header.tsx";
 
 function App() {
   const [address, setAddress] = useState<string>("");
@@ -27,7 +28,10 @@ function App() {
   return (
     <div className="main-container">
       <NavMenu />
-      <Wallet address={address} />
+      <div className="main-screen_wrapper">
+        <Header />
+        <Wallet address={address} />
+      </div>
     </div>
   );
 };

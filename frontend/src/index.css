@@ -1,3 +1,18 @@
+* {
+  box-sizing: border-box;
+}
+
+input {
+  border: none;
+  outline: none;
+  background: none;
+  padding: 0;
+  margin: 0;
+  font: inherit;
+  color: inherit;
+  box-sizing: border-box;
+}
+
 :root {
   font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;
@@ -39,4 +54,10 @@ button {
   color: inherit;
   font: inherit;
   cursor: pointer;
+}
+
+.main-screen_wrapper {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
 }
