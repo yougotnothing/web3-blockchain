@@ -1,9 +1,12 @@
-import './market.css'
+import './market.css';
 
-export const Market = () => {
+const Market = () => {
   return (
     <div>
-      market впадлу уже делать пойду ща стим свой подниму по фасту и продолжу если успею
+      market впадлу уже делать пойду ща стим свой подниму по фасту и продолжу
+      если успею
     </div>
-  )
-}
+  );
+};
+
+export default Market;

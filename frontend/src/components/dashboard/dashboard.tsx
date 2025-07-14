@@ -1,21 +1,20 @@
-import { HugeiconsIcon } from '@hugeicons/react'
-import './dashboard.css'
-import { UserSharingIcon } from '@hugeicons/core-free-icons'
+import { HugeiconsIcon } from '@hugeicons/react';
+import './dashboard.css';
+import { UserSharingIcon } from '@hugeicons/core-free-icons';
 
-export const Dashboard = () => {
+const Dashboard = () => {
   return (
     <div className="dashboard-container">
       <div className="dashboard-profile_container">
         <div className="dashboard-profile_avatar">
-          <HugeiconsIcon className='dashboard-profile_avatar' icon={UserSharingIcon}/>
+          <HugeiconsIcon
+            className="dashboard-profile_avatar"
+            icon={UserSharingIcon}
+          />
         </div>
         <div className="username-wrapper">
-          <div className="dashboard-profile_name">
-            pipka
-          </div>
-          <div className="dashboard-profile_socials">
-            twitter: link
-          </div>
+          <div className="dashboard-profile_name">pipka</div>
+          <div className="dashboard-profile_socials">twitter: link</div>
         </div>
         <div className="dashboard-profile_info">
           <div className="dashboard-profile_item">
@@ -37,5 +36,7 @@ export const Dashboard = () => {
         </div>
       </div>
     </div>
-  )
-}
+  );
+};
+
+export default Dashboard;

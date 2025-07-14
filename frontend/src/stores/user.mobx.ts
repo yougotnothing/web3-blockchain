@@ -2,6 +2,7 @@ import { action, makeObservable, observable } from 'mobx';
 import type { Transaction } from 'types/transaction';
 import api from 'api';
 
+/* eslint-disable @typescript-eslint/no-explicit-any */
 class UserStore {
   @observable public name: string = '';
   @observable public email: string = '';
@@ -49,8 +50,8 @@ class UserStore {
     try {
       const response = await api.get(`transactions/${this.id}`);
       this.setTransactions(response.data);
-    } catch (error) {
-      console.error((error as Record<string, any>).response.data);
+    } catch (error: any) {
+      console.error(error.response.data);
     }
   }
 
@@ -65,8 +66,8 @@ class UserStore {
       this.setAvatar(response.data.avatar);
       this.setTransactions(response.data.transactions);
       this.setCreatedAt(response.data.created_at);
-    } catch (error) {
-      console.error(error);
+    } catch (error: any) {
+      console.error(error.response.data);
     }
   }
 }

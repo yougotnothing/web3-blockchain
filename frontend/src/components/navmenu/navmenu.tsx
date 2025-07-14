@@ -1,34 +1,31 @@
-import { HugeiconsIcon } from '@hugeicons/react'
-import './navmenu.css'
-import logo from '../../assets/matcha.png'
-import { NavButtons } from './navbuttons'
+import { HugeiconsIcon } from '@hugeicons/react';
+import logo from '../../assets/matcha.png';
+import { NavButtons } from './navbuttons';
 import { ArrowRight01Icon } from '@hugeicons/core-free-icons';
-import { NavLink } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
+import './navmenu.css';
 
 export const NavMenu = () => {
+  const navigate = useNavigate();
+
   return (
-    <div className='navmenu-container'>
-      <div className='navmenu-title_container'>
-        <img src={logo} alt="Logo" className='navmenu-title_logo'/>
-        <div className='navmenu-title_text'>
-          Matcha Wallet
-        </div>
+    <div className="navmenu-container">
+      <div className="navmenu-title_container">
+        <img src={logo} alt="Logo" className="navmenu-title_logo" />
+        <div className="navmenu-title_text">Matcha Wallet</div>
       </div>
-      <div className='navmenu-block'>
-        <div className='navmenu-block_title'>
-          Menu
-        </div>
+      <div className="navmenu-block">
+        <div className="navmenu-block_title">Menu</div>
         {Object.entries(NavButtons).map(([key, { label, icon, path }]) => (
-          <NavLink           
-            to={path}
+          <button
+            className="navbutton"
             key={key}
+            onClick={() => navigate(path)}
           >
-            <button className='navbutton' key={key}>
-              <HugeiconsIcon icon={icon} />
-              <div className='navbutton-text'>{label}</div>
-              <HugeiconsIcon icon={ArrowRight01Icon} />
-            </button>
-          </NavLink>
+            <HugeiconsIcon icon={icon} />
+            <div className="navbutton-text">{label}</div>
+            <HugeiconsIcon icon={ArrowRight01Icon} />
+          </button>
         ))}
       </div>
     </div>

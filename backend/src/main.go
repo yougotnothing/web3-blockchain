@@ -26,20 +26,18 @@ func main() {
 	}
 
 	db, err := gorm.Open(postgres.Open(os.Getenv("PSQL_CONNECTION_SETTINGS")), &gorm.Config{})
-	sqlDB, err := db.DB()
+	sqlDB, dbErr := db.DB()
 
 	if err != nil {
 		log.Fatalf("failed to get sql.DB from gorm.DB: %v", err)
 	}
 
-	_, err = sqlDB.Exec("CREATE EXTENSION IF NOT EXISTS \"uuid-ossp\";")
-
-	if err != nil {
-		log.Fatalf("failed to create uuid-ossp extension: %v", err)
+	if _, err = sqlDB.Exec("CREATE EXTENSION IF NOT EXISTS \"uuid-ossp\";"); err != nil {
+		log.Fatalf("failed to create uuid-ossp extension: %v", err.Error())
 	}
 
-	if err != nil {
-		panic("failed to connect database: \n" + err.Error())
+	if dbErr != nil {
+		panic("failed to connect database: \n" + dbErr.Error())
 	}
 
 	if err := db.AutoMigrate(&models.User{}, &models.Transaction{}); err != nil {
