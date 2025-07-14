@@ -7,15 +7,18 @@ import {
 export const NavButtons = {
   dashboard: {
     label: 'Dashboard',
-    icon: DashboardSquareEditIcon
+    icon: DashboardSquareEditIcon,
+    path: 'dashboard'
   },
   wallet: {
     label: 'Wallet',
-    icon: WalletIcon
+    icon: WalletIcon,
+    path: 'wallet'
   },
   market: {
     label: 'Market',
-    icon: MarketAnalysisIcon
+    icon: MarketAnalysisIcon,
+    path: 'market'
   }
 };
 

@@ -1,8 +1,9 @@
 import { HugeiconsIcon } from '@hugeicons/react'
 import './navmenu.css'
 import logo from '../../assets/matcha.png'
-import { NavButtons, PressButton } from './navbuttons'
+import { NavButtons } from './navbuttons'
 import { ArrowRight01Icon } from '@hugeicons/core-free-icons';
+import { NavLink } from 'react-router-dom';
 
 export const NavMenu = () => {
   return (
@@ -17,12 +18,17 @@ export const NavMenu = () => {
         <div className='navmenu-block_title'>
           Menu
         </div>
-        {Object.entries(NavButtons).map(([key, { label, icon }]) => (
-          <button onClick={() => PressButton('https://www.youtube.com/watch?v=BFqHyCoypfM')} className='navbutton' key={key}>
-            <HugeiconsIcon icon={icon} />
-            <div className='navbutton-text'>{label}</div>
-            <HugeiconsIcon icon={ArrowRight01Icon} />
-          </button>
+        {Object.entries(NavButtons).map(([key, { label, icon, path }]) => (
+          <NavLink           
+            to={path}
+            key={key}
+          >
+            <button className='navbutton' key={key}>
+              <HugeiconsIcon icon={icon} />
+              <div className='navbutton-text'>{label}</div>
+              <HugeiconsIcon icon={ArrowRight01Icon} />
+            </button>
+          </NavLink>
         ))}
       </div>
     </div>
