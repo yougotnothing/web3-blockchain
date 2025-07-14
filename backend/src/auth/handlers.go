@@ -5,6 +5,7 @@ import (
 	"time"
 	"web3-blockchain/backend/src/models"
 
+	gv "github.com/bube054/ginvalidator"
 	"github.com/gin-gonic/gin"
 	"github.com/golang-jwt/jwt/v5"
 	"golang.org/x/crypto/bcrypt"
@@ -77,9 +78,17 @@ func Register(db *gorm.DB) gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 		var registerDto RegisterDto
 		var user models.User
+		if result, err := gv.ValidationResult(ctx); err != nil {
+			ctx.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+			return
+		} else if result != nil {
+			ctx.JSON(http.StatusBadRequest, gin.H{"error": result})
+			return
+		}
 
 		if err := ctx.ShouldBindJSON(&registerDto); err != nil {
 			ctx.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+			return
 		}
 
 		if err := db.First(&user, "email = ?", registerDto.Email).Error; err == nil {
@@ -103,5 +112,7 @@ func Register(db *gorm.DB) gin.HandlerFunc {
 			ctx.JSON(500, gin.H{"error": err})
 			return
 		}
+
+		ctx.JSON(200, gin.H{"message": "User registered successfully"})
 	}
 }

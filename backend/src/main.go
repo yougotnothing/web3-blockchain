@@ -1,6 +1,7 @@
 package main
 
 import (
+	"log"
 	"os"
 	"web3-blockchain/backend/src/auth"
 	"web3-blockchain/backend/src/middleware"
@@ -25,12 +26,25 @@ func main() {
 	}
 
 	db, err := gorm.Open(postgres.Open(os.Getenv("PSQL_CONNECTION_SETTINGS")), &gorm.Config{})
+	sqlDB, err := db.DB()
+
+	if err != nil {
+		log.Fatalf("failed to get sql.DB from gorm.DB: %v", err)
+	}
+
+	_, err = sqlDB.Exec("CREATE EXTENSION IF NOT EXISTS \"uuid-ossp\";")
+
+	if err != nil {
+		log.Fatalf("failed to create uuid-ossp extension: %v", err)
+	}
 
 	if err != nil {
 		panic("failed to connect database: \n" + err.Error())
 	}
 
-	db.AutoMigrate(&models.User{}, &models.Transaction{})
+	if err := db.AutoMigrate(&models.User{}, &models.Transaction{}); err != nil {
+		panic("failed to migrate database: \n" + err.Error())
+	}
 
 	r := gin.Default()
 	r.GET("/", func(ctx *gin.Context) {
@@ -56,20 +70,20 @@ func main() {
 	r.POST("/auth/login", auth.Login(db))
 	r.POST("/auth/register", gv.NewBody("email", nil).
 		Chain().
+		Email(&vgo.IsEmailOpts{}).
 		Not().
 		Empty(&vgo.IsEmptyOpts{IgnoreWhitespace: false}).
-		Email(&vgo.IsEmailOpts{}).
 		Validate(),
 		gv.NewBody("password", nil).
 			Chain().
-			Not().
-			Empty(&vgo.IsEmptyOpts{IgnoreWhitespace: false}).
 			StrongPassword(&vgo.IsStrongPasswordOpts{
 				MinLength:    &utils.MinLength,
 				MinLowercase: &utils.MinElse,
 				MinUppercase: &utils.MinElse,
 				MinNumbers:   &utils.MinElse,
 				MinSymbols:   &utils.MinElse}).
+			Not().
+			Empty(&vgo.IsEmptyOpts{}).
 			Validate(),
 		auth.Register(db))
 
