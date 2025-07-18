@@ -1,6 +1,6 @@
 import { HugeiconsIcon } from '@hugeicons/react';
-import './dashboard.css';
 import { UserSharingIcon } from '@hugeicons/core-free-icons';
+import './dashboard.css';
 
 const Dashboard = () => {
   return (

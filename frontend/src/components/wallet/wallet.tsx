@@ -1,8 +1,9 @@
 import { useEffect } from 'react';
 import { walletStore } from 'store/wallet';
 import './wallet.css';
+import { observer } from 'mobx-react-lite';
 
-const Wallet = () => {
+const Wallet = observer(() => {
   useEffect(() => {
     if (!walletStore.address) return;
 
@@ -29,6 +30,6 @@ const Wallet = () => {
       </div>
     </div>
   );
-};
+});
 
 export default Wallet;
