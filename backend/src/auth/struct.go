@@ -1,8 +1,8 @@
 package auth
 
 type Tokens struct {
-	AccessToken  []byte `json:"access_token"`
-	RefreshToken []byte `json:"refresh_token"`
+	AccessToken  string `json:"access_token"`
+	RefreshToken string `json:"refresh_token"`
 }
 
 type LoginDto struct {

@@ -13,13 +13,23 @@ import (
 )
 
 func GenerateToken(user *models.User) Tokens {
+	token := func(exp int64) *jwt.Token {
+		return jwt.NewWithClaims(
+			jwt.SigningMethodHS256,
+			jwt.MapClaims{"id": user.ID, "email": user.Email, "exp": exp})
+	}
+	accessToken, accessErr := token(time.Now().Add(time.Hour * 24).Unix()).SignedString([]byte("secret"))
+	refreshToken, err := token(time.Now().Add(time.Hour * 24 * 31).Unix()).SignedString([]byte("secret"))
+
+	if accessErr != nil {
+		panic(accessErr)
+	} else if err != nil {
+		panic(err)
+	}
+
 	return Tokens{
-		AccessToken: jwt.NewWithClaims(
-			jwt.SigningMethodES256,
-			jwt.MapClaims{"id": user.ID, "email": user.Email, "exp": time.Now().Add(time.Hour * 24).Unix()}).Signature,
-		RefreshToken: jwt.NewWithClaims(
-			jwt.SigningMethodES256,
-			jwt.MapClaims{"id": user.ID, "email": user.Email, "exp": time.Now().Add(time.Hour * 24 * 31).Unix()}).Signature,
+		AccessToken:  accessToken,
+		RefreshToken: refreshToken,
 	}
 }
 
@@ -41,7 +51,7 @@ func RefreshTokens(user *models.User) gin.HandlerFunc {
 		if isVerified.Valid {
 			tokens := GenerateToken(user)
 
-			ctx.SetCookie("refresh_token", string(tokens.RefreshToken), 360000, "/", "http://localhost:5173", true, true)
+			ctx.SetCookie("refresh_token", tokens.RefreshToken, 360000, "/", "http://localhost:5173", true, true)
 			ctx.JSON(200, gin.H{"message": "Tokens refreshed success", "access_token": tokens.AccessToken})
 		}
 	}
@@ -69,7 +79,7 @@ func Login(db *gorm.DB) gin.HandlerFunc {
 
 		tokens := GenerateToken(&user)
 
-		ctx.SetCookie("refresh_token", string(tokens.RefreshToken), 360000, "/", "http://localhost:5173", true, true)
+		ctx.SetCookie("refresh_token", tokens.RefreshToken, 360000, "/", "http://localhost:5173", true, true)
 		ctx.JSON(200, gin.H{"message": "Logged in success", "access_token": tokens.AccessToken})
 	}
 }

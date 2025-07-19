@@ -45,17 +45,27 @@ func main() {
 	}
 
 	r := gin.Default()
+
+	corsConfig := cors.Config{
+		AllowOrigins:     []string{"http://localhost:5173", "https://hotord.ru", "https://blink-trade.space"},
+		AllowMethods:     []string{"GET", "POST", "DELETE", "PATCH"},
+		AllowHeaders:     []string{"Origin", "Content-Type", "Accept", "Authorization"},
+		AllowCredentials: true,
+	}
+
+	r.Use(cors.New(corsConfig))
+
 	r.GET("/", func(ctx *gin.Context) {
 		ctx.JSON(200, gin.H{"message": "Hello, World!"})
 	})
 
-	users := r.Group("/user/:id")
+	users := r.Group("/user")
 	users.Use(middleware.Auth)
 
 	r.POST("/user", user.CreateUser(db))
-	users.GET("/user/:id", user.GetUser(db))
-	users.PATCH("/user/:id", user.UpdateUser(db))
-	users.DELETE("/user/:id", user.DeleteUser(db))
+	users.GET("/:id", user.GetUser(db))
+	users.PATCH("/:id", user.UpdateUser(db))
+	users.DELETE("/:id", user.DeleteUser(db))
 
 	private := r.Group("/transactions/:id")
 	private.Use(middleware.Auth)
@@ -84,13 +94,6 @@ func main() {
 			Empty(&vgo.IsEmptyOpts{}).
 			Validate(),
 		auth.Register(db))
-
-	corsConfig := cors.DefaultConfig()
-	corsConfig.AllowOrigins = []string{"http://localhost:5173"}
-	corsConfig.AllowMethods = []string{"*"}
-	corsConfig.AllowHeaders = []string{"*"}
-
-	r.Use(cors.New(corsConfig))
 
 	r.Run(":3000")
 }

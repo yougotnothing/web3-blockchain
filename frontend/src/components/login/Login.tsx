@@ -26,6 +26,7 @@ const Login = () => {
     <>
       <div>
         <input
+          name="email"
           placeholder="Enter email"
           value={formik.values.email}
           onChange={formik.handleChange}
@@ -35,6 +36,7 @@ const Login = () => {
       </div>
       <div>
         <input
+          name="password"
           placeholder="Enter password"
           value={formik.values.password}
           onChange={formik.handleChange}
