@@ -1,7 +1,9 @@
 import api from 'api';
 import { useFormik } from 'formik';
-import type { registerSchema } from 'utils/register.schema';
+import { registerSchema } from 'utils/register.schema';
 import { type InferType } from 'yup';
+import './register.css';
+import { useEffect } from 'react';
 
 const Register = () => {
   const formik = useFormik<InferType<typeof registerSchema>>({
@@ -10,6 +12,7 @@ const Register = () => {
       password: '',
       name: '',
     },
+    validationSchema: registerSchema,
     onSubmit: () => {},
   });
 
@@ -23,17 +26,22 @@ const Register = () => {
     }
   };
 
+  useEffect(() => {
+    console.log(formik.errors);
+  }, [formik.values]);
+
   return (
-    <div>
-      <form onSubmit={formik.handleSubmit}>
+    <div className="wrapper">
+      <div className="inputs-wrapper">
         <input
-          type="email"
+          className="inputs-wrapper input"
           name="email"
           value={formik.values.email}
           onChange={formik.handleChange}
           onBlur={formik.handleBlur}
         />
         <input
+          className="inputs-wrapper input"
           type="password"
           name="password"
           value={formik.values.password}
@@ -41,16 +49,15 @@ const Register = () => {
           onBlur={formik.handleBlur}
         />
         <input
-          type="text"
+          className="inputs-wrapper input"
           name="name"
           value={formik.values.name}
           onChange={formik.handleChange}
           onBlur={formik.handleBlur}
         />
-        <button type="submit" onClick={handleRegister}>
-          Register
-        </button>
-      </form>
+        <div className="inputs-wrapper error-field">{formik.errors.name}</div>
+        <button onClick={handleRegister}>Register</button>
+      </div>
     </div>
   );
 };

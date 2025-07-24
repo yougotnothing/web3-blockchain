@@ -88,6 +88,7 @@ func Register(db *gorm.DB) gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 		var registerDto RegisterDto
 		var user models.User
+
 		if result, err := gv.ValidationResult(ctx); err != nil {
 			ctx.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 			return

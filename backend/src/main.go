@@ -67,13 +67,13 @@ func main() {
 	users.PATCH("/:id", user.UpdateUser(db))
 	users.DELETE("/:id", user.DeleteUser(db))
 
-	private := r.Group("/transactions/:id")
+	private := r.Group("/transactions")
 	private.Use(middleware.Auth)
 
-	private.GET("/transactions/:id", transaction.GetAllTransactionsByUserId(db))
-	private.POST("/transactions/:id", transaction.CreateTransaction(db))
-	private.DELETE("/transactions/:id", transaction.DeleteTransaction(db))
-	private.PATCH("/transactions/:id", transaction.ChangeTransactionStatus(db))
+	private.GET("/:id", transaction.GetAllTransactionsByUserId(db))
+	private.POST("/:id", transaction.CreateTransaction(db))
+	private.DELETE("/:id", transaction.DeleteTransaction(db))
+	private.PATCH("/:id", transaction.ChangeTransactionStatus(db))
 
 	r.POST("/auth/login", auth.Login(db))
 	r.POST("/auth/register", gv.NewBody("email", nil).
