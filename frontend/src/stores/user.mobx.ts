@@ -58,7 +58,7 @@ class UserStore {
   @action.bound
   public async getSelf(): Promise<void> {
     try {
-      const response = await api.get('self');
+      const response = await api.get('user/self');
 
       this.setId(response.data.id);
       this.setName(response.data.name);

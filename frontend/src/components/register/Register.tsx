@@ -2,10 +2,13 @@ import api from 'api';
 import { useFormik } from 'formik';
 import { registerSchema } from 'utils/register.schema';
 import { type InferType } from 'yup';
+import { useNavigate } from 'react-router-dom';
 import './register.css';
-import { useEffect } from 'react';
+
+const INPUTS = ['name', 'email', 'password'];
 
 const Register = () => {
+  const navigate = useNavigate();
   const formik = useFormik<InferType<typeof registerSchema>>({
     initialValues: {
       email: '',
@@ -18,45 +21,32 @@ const Register = () => {
 
   const handleRegister = async () => {
     try {
-      const response = await api.post('/auth/register', formik.values);
+      await api.post('/auth/register', formik.values);
 
-      console.log(response.data);
+      navigate('/login');
     } catch (error) {
       console.error(error);
     }
   };
 
-  useEffect(() => {
-    console.log(formik.errors);
-  }, [formik.values]);
-
   return (
     <div className="wrapper">
       <div className="inputs-wrapper">
-        <input
-          className="inputs-wrapper input"
-          name="email"
-          value={formik.values.email}
-          onChange={formik.handleChange}
-          onBlur={formik.handleBlur}
-        />
-        <input
-          className="inputs-wrapper input"
-          type="password"
-          name="password"
-          value={formik.values.password}
-          onChange={formik.handleChange}
-          onBlur={formik.handleBlur}
-        />
-        <input
-          className="inputs-wrapper input"
-          name="name"
-          value={formik.values.name}
-          onChange={formik.handleChange}
-          onBlur={formik.handleBlur}
-        />
-        <div className="inputs-wrapper error-field">{formik.errors.name}</div>
+        {INPUTS.map(key => (
+          <input
+            placeholder={`Enter ${key}`}
+            className="inputs-wrapper input"
+            name={key}
+            value={formik.values[key as keyof typeof formik.values]}
+            onChange={formik.handleChange}
+            onBlur={formik.handleBlur}
+          />
+        ))}
+        <div className="inputs-wrapper error-field">
+          {formik.errors.name || formik.errors.email || formik.errors.password}
+        </div>
         <button onClick={handleRegister}>Register</button>
+        <button onClick={() => navigate('/login')}>Already registered?</button>
       </div>
     </div>
   );

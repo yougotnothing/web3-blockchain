@@ -34,6 +34,7 @@
   }
 
   &.error-field {
+    height: 3rem;
     border: none;
     background: transparent;
     color: red;

@@ -63,6 +63,7 @@ func main() {
 	users.Use(middleware.Auth)
 
 	r.POST("/user", user.CreateUser(db))
+	users.GET("/self", user.GetSelf(db))
 	users.GET("/:id", user.GetUser(db))
 	users.PATCH("/:id", user.UpdateUser(db))
 	users.DELETE("/:id", user.DeleteUser(db))

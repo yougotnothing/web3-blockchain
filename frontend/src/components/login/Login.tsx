@@ -1,14 +1,19 @@
 import api from 'api';
 import { useFormik } from 'formik';
-import { type loginSchema } from 'utils/login.schema';
+import { loginSchema } from 'utils/login.schema';
 import { type InferType } from 'yup';
+import { useNavigate } from 'react-router-dom';
+import './login.css';
+import { userStore } from 'store/user';
 
 const Login = () => {
+  const navigate = useNavigate();
   const formik = useFormik<InferType<typeof loginSchema>>({
     initialValues: {
       email: '',
       password: '',
     },
+    validationSchema: loginSchema,
     onSubmit: () => {},
   });
 
@@ -17,13 +22,17 @@ const Login = () => {
       const response = await api.post('/auth/login', formik.values);
 
       localStorage.setItem('access_token', response.data.access_token);
+
+      userStore.getSelf();
+
+      navigate('/dashboard');
     } catch (error) {
       console.error(error);
     }
   };
 
   return (
-    <>
+    <div className="wrapper">
       <div>
         <input
           name="email"
@@ -45,7 +54,8 @@ const Login = () => {
         <span>{formik.errors.password}</span>
       </div>
       <button onClick={handleLogin}>Login</button>
-    </>
+      <button onClick={() => navigate('/register')}>Not registered yet?</button>
+    </div>
   );
 };
 

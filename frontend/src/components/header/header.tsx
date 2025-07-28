@@ -1,9 +1,11 @@
 import { HugeiconsIcon } from '@hugeicons/react';
 import { BitcoinSearchIcon, UserSharingIcon } from '@hugeicons/core-free-icons';
 import { useRef } from 'react';
+import { userStore } from 'store/user';
 import './header.css';
+import { observer } from 'mobx-react-lite';
 
-export const Header = () => {
+export const Header = observer(() => {
   const inputRef = useRef<HTMLInputElement>(null);
 
   return (
@@ -20,17 +22,19 @@ export const Header = () => {
           placeholder="Search"
         />
       </div>
-      <div className="profile-container">
-        {/* Temporary solution till backend profiles */}
-        <div className="profile-image">
-          <HugeiconsIcon className="profile-image" icon={UserSharingIcon} />
-        </div>
-        {/* Temporary solution till backend profiles */}
+      <button className="profile-container" onClick={userStore.getSelf}>
+        {userStore.avatar ? (
+          <img src={userStore.avatar} className="profile-image" />
+        ) : (
+          <div className="profile-image">
+            <HugeiconsIcon className="profile-image" icon={UserSharingIcon} />
+          </div>
+        )}
         <div className="profile-user_container">
-          <div className="profile-user_name">Vlad Troyan</div>
+          <div className="profile-user_name">{userStore.name}</div>
           <div className="profile-user_subname">Profile</div>
         </div>
-      </div>
+      </button>
     </div>
   );
-};
+});
