@@ -1,8 +1,8 @@
 package user
 
 import (
-	"errors"
 	"net/http"
+	"os"
 	"strings"
 	"web3-blockchain/backend/src/models"
 
@@ -17,7 +17,7 @@ func GetUser(db *gorm.DB) gin.HandlerFunc {
 		userId := ctx.Param("id")
 
 		var user models.User
-		if err := db.First(&user, userId).Error; err != nil {
+		if err := db.First(&user).Where(&models.User{ID: uuid.FromStringOrNil(userId)}).Error; err != nil {
 			ctx.JSON(http.StatusNotFound, gin.H{"error": err.Error()})
 			return
 		}
@@ -78,25 +78,32 @@ func DeleteUser(db *gorm.DB) gin.HandlerFunc {
 
 func GetSelf(db *gorm.DB) gin.HandlerFunc {
 	return func(ctx *gin.Context) {
-		authHeader := ctx.GetHeader("Authorization")
-		parts := strings.Split(authHeader, " ")
-		if len(parts) != 2 || parts[0] != "Bearer" {
-			ctx.JSON(http.StatusUnauthorized, gin.H{"error": "Authorization header format must be Bearer {token}"})
+		var user models.User
+
+		_, err := jwt.Parse(strings.Split(ctx.GetHeader("Authorization"), " ")[1], func(token *jwt.Token) (interface{}, error) {
+			if _, ok := token.Claims.(jwt.MapClaims); ok {
+				if err := db.First(&user).Where(&models.User{ID: uuid.FromStringOrNil(token.Claims.(jwt.MapClaims)["id"].(string))}).Error; err != nil {
+					ctx.JSON(http.StatusUnauthorized, gin.H{"error": err.Error()})
+				}
+
+				return []byte(os.Getenv("SECRET")), nil
+			}
+
+			return []byte(os.Getenv("SECRET")), nil
+		})
+
+		if err != nil {
+			ctx.JSON(http.StatusUnauthorized, gin.H{"error": err.Error()})
 			return
 		}
 
-		access_token := strings.TrimSpace(parts[1])
-		var user models.User
-
-		jwt.Parse(access_token, func(token *jwt.Token) (interface{}, error) {
-			if claims, ok := token.Claims.(jwt.MapClaims); ok && token.Valid {
-				userID := claims["sub"].(string)
-				if err := db.First(&user).Where(&models.User{ID: uuid.FromStringOrNil(userID)}).Error; err != nil {
-					return nil, err
-				}
-				return user, nil
-			}
-			return nil, errors.New("invalid token")
+		ctx.JSON(http.StatusOK, PublicUser{
+			ID:           user.ID,
+			Email:        user.Email,
+			Transactions: user.Transactions,
+			Name:         user.Name,
+			AvatarURL:    "",
+			CreatedAt:    user.CreatedAt,
 		})
 	}
 }

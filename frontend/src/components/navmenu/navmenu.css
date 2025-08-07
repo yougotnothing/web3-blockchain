@@ -1,3 +1,15 @@
+@keyframes arrow {
+  0% {
+    right: 0;
+  }
+  50% {
+    right: 0.3rem;
+  }
+  100% {
+    right: 0;
+  }
+}
+
 .navmenu-container {
   height: 100vh;
   width: 300px;
@@ -12,13 +24,24 @@
   width: 100%;
   border-radius: 10px;
   background-color: black;
-  transition: background-color 0.3s, color 0.3s;
+  transition:
+    background-color 0.3s,
+    color 0.3s;
   color: rgba(255, 255, 255, 0.7);
+}
+
+.navbutton-arrow-icon {
+  position: relative;
+  right: 0;
 }
 
 .navbutton:hover {
   background-color: rgba(255, 255, 255, 0.1);
   color: white;
+}
+
+.navbutton:hover .navbutton-arrow-icon {
+  animation: 0.3s arrow ease-in-out;
 }
 
 .navbutton-text {
@@ -44,8 +67,9 @@
 }
 
 .navmenu-title_text {
-  font-size: 26px;
+  font-size: 1.6rem;
   margin-left: 20px;
+  user-select: none;
 }
 
 .navmenu-title_logo {

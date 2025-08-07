@@ -1,6 +1,6 @@
 import { HugeiconsIcon } from '@hugeicons/react';
 import logo from '../../assets/matcha.png';
-import { NavButtons } from './navbuttons';
+import { NAV_BUTTONS } from './navbuttons';
 import { ArrowRight01Icon } from '@hugeicons/core-free-icons';
 import { useNavigate } from 'react-router-dom';
 import './navmenu.css';
@@ -16,7 +16,7 @@ export const NavMenu = () => {
       </div>
       <div className="navmenu-block">
         <div className="navmenu-block_title">Menu</div>
-        {Object.entries(NavButtons).map(([key, { label, icon, path }]) => (
+        {Object.entries(NAV_BUTTONS).map(([key, { label, icon, path }]) => (
           <button
             className="navbutton"
             key={key}
@@ -24,7 +24,10 @@ export const NavMenu = () => {
           >
             <HugeiconsIcon icon={icon} />
             <div className="navbutton-text">{label}</div>
-            <HugeiconsIcon icon={ArrowRight01Icon} />
+            <HugeiconsIcon
+              icon={ArrowRight01Icon}
+              className="navbutton-arrow-icon"
+            />
           </button>
         ))}
       </div>

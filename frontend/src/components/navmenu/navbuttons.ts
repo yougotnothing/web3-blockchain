@@ -4,7 +4,7 @@ import {
   WalletIcon,
 } from '@hugeicons/core-free-icons';
 
-export const NavButtons = {
+export const NAV_BUTTONS = {
   dashboard: {
     label: 'Dashboard',
     icon: DashboardSquareEditIcon,
@@ -20,8 +20,8 @@ export const NavButtons = {
     icon: MarketAnalysisIcon,
     path: 'market',
   },
-};
+} as const;
 
-export const PressButton = (url: string) => {
+export const pressButton = (url: string) => {
   window.open(url, '_blank');
 };

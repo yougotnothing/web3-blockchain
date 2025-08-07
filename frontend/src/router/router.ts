@@ -8,15 +8,15 @@ export const router = createBrowserRouter([
     children: [
       {
         path: '/wallet',
-        Component: lazy(() => import('components/wallet/wallet')),
+        Component: lazy(() => import('components/wallet/Wallet')),
       },
       {
         path: '/dashboard',
-        Component: lazy(() => import('components/dashboard/dashboard')),
+        Component: lazy(() => import('components/dashboard/Dashboard')),
       },
       {
         path: '/market',
-        Component: lazy(() => import('components/market/market')),
+        Component: lazy(() => import('components/market/Market')),
       },
     ],
   },

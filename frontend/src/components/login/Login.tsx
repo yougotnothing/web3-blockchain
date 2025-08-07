@@ -4,7 +4,8 @@ import { loginSchema } from 'utils/login.schema';
 import { type InferType } from 'yup';
 import { useNavigate } from 'react-router-dom';
 import './login.css';
-import { userStore } from 'store/user';
+import { user } from 'store/user';
+import useTitle from 'hooks/useTitle';
 
 const Login = () => {
   const navigate = useNavigate();
@@ -23,13 +24,15 @@ const Login = () => {
 
       localStorage.setItem('access_token', response.data.access_token);
 
-      userStore.getSelf();
+      user.getSelf();
 
       navigate('/dashboard');
     } catch (error) {
       console.error(error);
     }
   };
+
+  useTitle('Login');
 
   return (
     <div className="wrapper">

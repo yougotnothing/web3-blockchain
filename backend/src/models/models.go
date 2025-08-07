@@ -22,6 +22,6 @@ type User struct {
 	Name         string        `json:"name" gorm:"column:name"`
 	Email        string        `json:"email" gorm:"column:email;unique"`
 	Password     string        `json:"password" gorm:"column:password"`
-	Transactions []Transaction `json:"transactions" gorm:"foreignKey:UserID;references:ID"`
+	Transactions []Transaction `json:"transactions" gorm:"foreignKey:UserID;references:ID;default:[]"`
 	CreatedAt    time.Time     `json:"created_at" gorm:"column:created_at;default:CURRENT_TIMESTAMP"`
 }

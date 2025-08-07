@@ -21,6 +21,7 @@ import (
 )
 
 func main() {
+	gin.Logger()
 	if err := godotenv.Load("../.env"); err != nil {
 		panic("failed to load .env file")
 	}
@@ -76,6 +77,7 @@ func main() {
 	private.DELETE("/:id", transaction.DeleteTransaction(db))
 	private.PATCH("/:id", transaction.ChangeTransactionStatus(db))
 
+	r.POST("/auth/refresh", auth.Refresh)
 	r.POST("/auth/login", auth.Login(db))
 	r.POST("/auth/register", gv.NewBody("email", nil).
 		Chain().

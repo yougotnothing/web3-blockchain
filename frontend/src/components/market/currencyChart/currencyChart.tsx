@@ -1,12 +1,15 @@
 import { LineChart, Line, ResponsiveContainer, YAxis } from 'recharts';
-import './currencyChart.css'
+import './currencyChart.css';
 
 interface CurrencyChartProps {
   data: number[];
   color?: string;
 }
 
-export const CurrencyChart = ({ data, color = '#10b981' }: CurrencyChartProps) => {
+export const CurrencyChart = ({
+  data,
+  color = '#10b981',
+}: CurrencyChartProps) => {
   const chartData = data.map((price, index) => ({ index, price }));
 
   const prices = data;
@@ -18,7 +21,7 @@ export const CurrencyChart = ({ data, color = '#10b981' }: CurrencyChartProps) =
   const domainMax = maxPrice * (1 + paddingFactor);
 
   return (
-    <div className='chart-container'>
+    <div className="chart-container">
       <ResponsiveContainer width="100%" height="100%">
         <LineChart data={chartData}>
           <YAxis

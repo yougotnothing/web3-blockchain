@@ -4,6 +4,7 @@ import { registerSchema } from 'utils/register.schema';
 import { type InferType } from 'yup';
 import { useNavigate } from 'react-router-dom';
 import './register.css';
+import useTitle from 'hooks/useTitle';
 
 const INPUTS = ['name', 'email', 'password'];
 
@@ -28,6 +29,8 @@ const Register = () => {
       console.error(error);
     }
   };
+
+  useTitle('Register');
 
   return (
     <div className="wrapper">

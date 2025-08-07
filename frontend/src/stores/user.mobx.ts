@@ -2,7 +2,6 @@ import { action, makeObservable, observable } from 'mobx';
 import type { Transaction } from 'types/transaction';
 import api from 'api';
 
-/* eslint-disable @typescript-eslint/no-explicit-any */
 class UserStore {
   @observable public name: string = '';
   @observable public email: string = '';
@@ -45,6 +44,7 @@ class UserStore {
     this.created_at = created_at;
   }
 
+  /* eslint-disable @typescript-eslint/no-explicit-any */
   @action.bound
   public async getTransactions(): Promise<void> {
     try {
@@ -72,4 +72,4 @@ class UserStore {
   }
 }
 
-export const userStore = new UserStore();
+export const user = new UserStore();

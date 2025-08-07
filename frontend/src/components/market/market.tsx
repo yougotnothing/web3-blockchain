@@ -1,51 +1,54 @@
-import { useState, useEffect } from 'react'
-import './Market.css'
-import { CurrencyChart } from './currencyChart/currencyChart'
+import { useState, useEffect } from 'react';
+import './Market.css';
+import { CurrencyChart } from './currencyChart/CurrencyChart';
+import useTitle from 'hooks/useTitle';
 
 interface Token {
-  id: string
-  symbol: string
-  name: string
-  current_price: number
-  price_change_percentage_24h: number
-  price_change_percentage_7d_in_currency: number
-  market_cap: number
-  image: string
+  id: string;
+  symbol: string;
+  name: string;
+  current_price: number;
+  price_change_percentage_24h: number;
+  price_change_percentage_7d_in_currency: number;
+  market_cap: number;
+  image: string;
   sparkline_in_7d: {
-    price: number[]
-  }
+    price: number[];
+  };
 }
 
 const Market = () => {
-  const [tokens, setTokens] = useState<Token[]>([])
-  const [loading, setLoading] = useState(true)
-  const [page, setPage] = useState(1)
+  const [tokens, setTokens] = useState<Token[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [page, setPage] = useState(1);
+
+  useTitle('Market');
 
   useEffect(() => {
     async function fetchPrices() {
       try {
         const res = await fetch(
           'https://api.coingecko.com/api/v3/coins/markets?' +
-          `vs_currency=usd&order=market_cap_desc&per_page=6&page=${page}&sparkline=true&price_change_percentage=7d`
-        )
-        const data = await res.json()
-        setTokens(data)
+            `vs_currency=usd&order=market_cap_desc&per_page=6&page=${page}&sparkline=true&price_change_percentage=7d`
+        );
+        const data = await res.json();
+        setTokens(data);
       } catch (e) {
-        console.error('Fetch prices failed:', JSON.stringify(e, null, 2))
+        console.error('Fetch prices failed:', JSON.stringify(e, null, 2));
       } finally {
-        setLoading(false)
+        setLoading(false);
       }
     }
-    fetchPrices()
-  }, [page])
+    fetchPrices();
+  }, [page]);
 
-  console.log('tokens: ', tokens)
+  console.log('tokens: ', tokens);
 
   const handlePageChange = (pageNumber: number) => {
-    setPage(pageNumber)
-  }
+    setPage(pageNumber);
+  };
 
-  if (loading) return <div className="market-loading">Loading...</div>
+  if (loading) return <div className="market-loading">Loading...</div>;
 
   return (
     <div className="market-container">
@@ -57,7 +60,7 @@ const Market = () => {
         />
       </div>
       <div className="market-grid">
-        {tokens.map((token) => (
+        {tokens.map(token => (
           <div key={token.id} className="market-card">
             <div>
               <div className="market-card-header">
@@ -84,30 +87,41 @@ const Market = () => {
               </div>
             </div>
             <div className="market-card-chart">
-              <div className="market-card-chart_title">
-                Last 7 Days
-              </div>
-            <CurrencyChart
-              data={token.sparkline_in_7d.price}
-              color={token.price_change_percentage_7d_in_currency < 0 ? '#ef4444' : '#10b981'}
-            />
+              <div className="market-card-chart_title">Last 7 Days</div>
+              <CurrencyChart
+                data={token.sparkline_in_7d.price}
+                color={
+                  token.price_change_percentage_7d_in_currency < 0
+                    ? '#ef4444'
+                    : '#10b981'
+                }
+              />
             </div>
           </div>
         ))}
       </div>
-      <div className='market-pagination'>
-        <button className='market-pagination-button' onClick={() => handlePageChange(1)}>
+      <div className="market-pagination">
+        <button
+          className="market-pagination-button"
+          onClick={() => handlePageChange(1)}
+        >
           1
         </button>
-        <button className='market-pagination-button' onClick={() => handlePageChange(2)}>
+        <button
+          className="market-pagination-button"
+          onClick={() => handlePageChange(2)}
+        >
           2
         </button>
-        <button className='market-pagination-button' onClick={() => handlePageChange(3)}>
+        <button
+          className="market-pagination-button"
+          onClick={() => handlePageChange(3)}
+        >
           3
         </button>
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default Market
+export default Market;

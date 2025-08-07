@@ -14,17 +14,29 @@ api.interceptors.request.use(config => {
   return config;
 });
 
-// api.interceptors.response.use(
-//   response => {
-//     return response;
-//   },
-//   error => {
-//     if (error.response.status === 401) {
-//       localStorage.removeItem('token');
-//       window.location.href = '/login';
-//     }
-//     return Promise.reject(error);
-//   }
-// );
+api.interceptors.response.use(
+  response => {
+    return response;
+  },
+  async error => {
+    if (
+      error.response.status === 401 &&
+      error.response.data.message.includes('token is expired')
+    ) {
+      const originalRequest = error.config;
+
+      originalRequest._retry = false;
+
+      const response = await api.post('auth/refresh');
+
+      localStorage.setItem('access_token', response.data.access_token);
+
+      originalRequest.headers.Authorization = `Bearer ${response.data.access_token}`;
+
+      return api(originalRequest);
+    }
+    return Promise.reject(error);
+  }
+);
 
 export default api;

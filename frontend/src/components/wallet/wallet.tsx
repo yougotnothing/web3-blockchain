@@ -2,8 +2,10 @@ import { useEffect } from 'react';
 import { walletStore } from 'store/wallet';
 import './wallet.css';
 import { observer } from 'mobx-react-lite';
+import useTitle from 'hooks/useTitle';
 
 const Wallet = observer(() => {
+  useTitle('Wallet');
   useEffect(() => {
     if (!walletStore.address) return;
 
