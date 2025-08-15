@@ -1,14 +1,21 @@
 package user
 
 import (
+	"context"
+	"fmt"
+	"io"
 	"net/http"
 	"os"
 	"strings"
+	"web3-blockchain/backend/src/auth"
+	minioClient "web3-blockchain/backend/src/minio"
 	"web3-blockchain/backend/src/models"
+	"web3-blockchain/backend/src/utils"
 
 	"github.com/gin-gonic/gin"
 	"github.com/gofrs/uuid"
 	"github.com/golang-jwt/jwt/v5"
+	"github.com/minio/minio-go/v7"
 	"gorm.io/gorm"
 )
 
@@ -102,8 +109,60 @@ func GetSelf(db *gorm.DB) gin.HandlerFunc {
 			Email:        user.Email,
 			Transactions: user.Transactions,
 			Name:         user.Name,
-			AvatarURL:    "",
+			AvatarURL:    user.AvatarURL,
 			CreatedAt:    user.CreatedAt,
 		})
+	}
+}
+
+func UpdateAvatar(db *gorm.DB) gin.HandlerFunc {
+	return func(ctx *gin.Context) {
+		avatar, header, err := ctx.Request.FormFile("avatar")
+		userID := auth.ExtractUserID(ctx)
+		var user models.User
+
+		if db.First(&user).Where(&models.User{ID: uuid.FromStringOrNil(userID)}).Error != nil {
+			ctx.JSON(http.StatusNotFound, gin.H{"error": "user not found"})
+			return
+		}
+
+		if err != nil {
+			ctx.JSON(http.StatusBadRequest, gin.H{"error": "avatar is required"})
+		}
+
+		if _, err := minioClient.S3Client().PutObject(context.Background(), utils.MinioBucketName, userID, avatar, header.Size, minio.PutObjectOptions{}); err != nil {
+			ctx.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+			return
+		}
+
+		ctx.JSON(http.StatusOK, gin.H{"message": "Avatar updated"})
+	}
+}
+
+func GetUserAvatar(db *gorm.DB) gin.HandlerFunc {
+	return func(ctx *gin.Context) {
+		userID := ctx.Param("id")
+		var user models.User
+
+		if db.First(&user).Where(&models.User{ID: uuid.FromStringOrNil(userID)}).Error != nil {
+			ctx.JSON(http.StatusNotFound, gin.H{"error": "user not found"})
+			return
+		}
+
+		avatar, err := minioClient.S3Client().GetObject(context.Background(), utils.MinioBucketName, userID, minio.GetObjectOptions{})
+		if err != nil {
+			ctx.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+			return
+		}
+		defer avatar.Close()
+
+		data, err := io.ReadAll(avatar)
+		if err != nil {
+			ctx.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+			return
+		}
+
+		ctx.Header("Content-Disposition", fmt.Sprintf("attachment; filename=%s", userID))
+		ctx.Data(http.StatusOK, "application/octet-stream", data)
 	}
 }

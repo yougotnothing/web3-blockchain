@@ -24,6 +24,7 @@
   height: 96px;
   width: 96px;
   border-radius: 50%;
+  object-fit: cover;
 }
 
 .dashboard-profile_info {

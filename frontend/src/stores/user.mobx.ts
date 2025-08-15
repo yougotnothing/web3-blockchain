@@ -63,7 +63,7 @@ class UserStore {
       this.setId(response.data.id);
       this.setName(response.data.name);
       this.setEmail(response.data.email);
-      this.setAvatar(response.data.avatar);
+      this.setAvatar(`http://localhost:3000/user/avatar/${response.data.id}`);
       this.setTransactions(response.data.transactions);
       this.setCreatedAt(response.data.created_at);
     } catch (error: any) {

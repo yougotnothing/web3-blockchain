@@ -5,6 +5,7 @@ import (
 	"os"
 	"web3-blockchain/backend/src/auth"
 	"web3-blockchain/backend/src/middleware"
+	"web3-blockchain/backend/src/minio"
 	"web3-blockchain/backend/src/models"
 	"web3-blockchain/backend/src/transaction"
 	"web3-blockchain/backend/src/user"
@@ -12,7 +13,6 @@ import (
 
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
-	"github.com/joho/godotenv"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 
@@ -21,13 +21,9 @@ import (
 )
 
 func main() {
-	gin.Logger()
-	if err := godotenv.Load("../.env"); err != nil {
-		panic("failed to load .env file")
-	}
-
 	db, err := gorm.Open(postgres.Open(os.Getenv("PSQL_CONNECTION_SETTINGS")), &gorm.Config{})
 	sqlDB, dbErr := db.DB()
+	minio.Init()
 
 	if err != nil {
 		log.Fatalf("failed to get sql.DB from gorm.DB: %v", err)
@@ -64,10 +60,12 @@ func main() {
 	users.Use(middleware.Auth)
 
 	r.POST("/user", user.CreateUser(db))
+	r.GET("/user/avatar/:id", user.GetUserAvatar(db))
 	users.GET("/self", user.GetSelf(db))
 	users.GET("/:id", user.GetUser(db))
 	users.PATCH("/:id", user.UpdateUser(db))
 	users.DELETE("/:id", user.DeleteUser(db))
+	users.PATCH("/avatar", user.UpdateAvatar(db))
 
 	private := r.Group("/transactions")
 	private.Use(middleware.Auth)

@@ -14,10 +14,14 @@ const Dashboard = observer(() => {
     <div className="dashboard-container">
       <div className="dashboard-profile_container">
         <div className="dashboard-profile_avatar">
-          <HugeiconsIcon
-            className="dashboard-profile_avatar"
-            icon={UserSharingIcon}
-          />
+          {user.avatar ? (
+            <img src={user.avatar} className="dashboard-profile_avatar" />
+          ) : (
+            <HugeiconsIcon
+              className="dashboard-profile_avatar"
+              icon={UserSharingIcon}
+            />
+          )}
         </div>
         <div className="username-wrapper">
           <div className="dashboard-profile_name">{user.name}</div>

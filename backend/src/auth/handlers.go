@@ -3,6 +3,7 @@ package auth
 import (
 	"net/http"
 	"os"
+	"strings"
 	"time"
 	"web3-blockchain/backend/src/models"
 
@@ -151,4 +152,34 @@ func Refresh(ctx *gin.Context) {
 	newRefreshToken, _ := GenerateRefreshToken(uuid.FromStringOrNil(userID), os.Getenv("SECRET"))
 	ctx.SetCookie("refresh_token", newRefreshToken, 360000, "/", "http://localhost:5173", true, true)
 	ctx.JSON(200, gin.H{"message": "Access token refreshed successfully", "access_token": accessToken})
+}
+
+func ExtractUserID(ctx *gin.Context) string {
+	authHeader := strings.Split(ctx.GetHeader("Authorization"), " ")[1]
+	if authHeader == "" {
+		ctx.JSON(http.StatusBadRequest, gin.H{"error": "Authorization header is missing"})
+		return ""
+	}
+
+	token, err := jwt.Parse(authHeader, func(token *jwt.Token) (interface{}, error) {
+		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
+			ctx.JSON(http.StatusBadRequest, gin.H{"error": "Invalid token"})
+			return nil, nil
+		}
+		return []byte(os.Getenv("SECRET")), nil
+	})
+
+	if err != nil {
+		ctx.JSON(http.StatusUnauthorized, gin.H{"error": err.Error()})
+		return ""
+	}
+
+	userID := token.Claims.(jwt.MapClaims)["id"].(string)
+
+	if userID == "" {
+		ctx.JSON(http.StatusInternalServerError, gin.H{"error": "Invalid credentials"})
+		return ""
+	}
+
+	return userID
 }
